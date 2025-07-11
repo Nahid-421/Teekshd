@@ -1,4 +1,4 @@
-# FINAL AND COMPLETE CODE - FOR PRIVATE REPOSITORY USE ONLY
+# FINAL, SECURE, AND PRODUCTION-READY CODE
 import os
 import sys
 import re
@@ -10,16 +10,32 @@ from functools import wraps
 from datetime import datetime
 
 # ======================================================================
-# --- আপনার ব্যক্তিগত ও অ্যাডমিন তথ্য (সরাসরি কোডে লেখা) ---
-# WARNING: This is not a secure practice. Keep your repository private.
+# --- আপনার ব্যক্তিগত ও অ্যাডমিন তথ্য (এনভায়রনমেন্ট থেকে লোড হবে) ---
+# এই ভেরিয়েবলগুলো আপনার হোস্টিং এনভায়রনমেন্টে সেট করতে হবে।
 # ======================================================================
-MONGO_URI = "mongodb+srv://wiyayi4591:wiyayi4591@cluster0.bjywyux.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-BOT_TOKEN = "8172918962:AAEN98mHtzYL7dFNxReT2Emwkz9-5eWwR4w"
-TMDB_API_KEY = "7dc544d9253bccc3cfecc1c677f69819"
-ADMIN_CHANNEL_ID = "-1002853936940"
-BOT_USERNAME = "CtgAutobot"
-ADMIN_USERNAME = "admin" # আপনি চাইলে এটি পরিবর্তন করতে পারেন
-ADMIN_PASSWORD = "password" # আপনি চাইলে এটি পরিবর্তন করতে পারেন
+MONGO_URI = os.environ.get("MONGO_URI")
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
+ADMIN_CHANNEL_ID = os.environ.get("ADMIN_CHANNEL_ID")
+BOT_USERNAME = os.environ.get("BOT_USERNAME")
+ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
+
+# --- প্রয়োজনীয় ভেরিয়েবলগুলো সেট করা হয়েছে কিনা তা পরীক্ষা করা ---
+required_vars = {
+    "MONGO_URI": MONGO_URI, "BOT_TOKEN": BOT_TOKEN, "TMDB_API_KEY": TMDB_API_KEY,
+    "ADMIN_CHANNEL_ID": ADMIN_CHANNEL_ID, "BOT_USERNAME": BOT_USERNAME,
+    "ADMIN_USERNAME": ADMIN_USERNAME, "ADMIN_PASSWORD": ADMIN_PASSWORD,
+}
+
+missing_vars = [name for name, value in required_vars.items() if not value]
+if missing_vars:
+    # This will cause the build to fail if a variable is missing, which is good.
+    print(f"FATAL: Missing required environment variables: {', '.join(missing_vars)}")
+    print("Please set these variables in your deployment environment and restart the application.")
+    sys.exit(1)
+
+# ======================================================================
 
 # --- অ্যাপ্লিকেশন সেটআপ ---
 TELEGRAM_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
@@ -44,9 +60,7 @@ def requires_auth(f):
 # --- ডাটাবেস কানেকশন ---
 try:
     client = MongoClient(MONGO_URI)
-    # The name of the database is specified in the MONGO_URI, or you can specify it here.
-    # Let's get the default database from the client object.
-    db = client.get_database()
+    db = client.get_database() # Automatically get the database from the URI
     movies = db["movies"]
     settings = db["settings"]
     feedback = db["feedback"]
