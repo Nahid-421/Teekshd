@@ -13,7 +13,7 @@ from datetime import datetime
 # --- আপনার ব্যক্তিগত ও অ্যাডমিন তথ্য (সরাসরি কোডে লেখা) ---
 # WARNING: This is not a secure practice. Keep your repository private.
 # ======================================================================
-MONGO_URI = "mongodb+srv://wiyayi4591:wiyayi4591@cluster0.bjywyux.mongodb.net/?retryWrites=true&w=majority"
+MONGO_URI = "mongodb+srv://wiyayi4591:wiyayi4591@cluster0.bjywyux.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 BOT_TOKEN = "8172918962:AAEN98mHtzYL7dFNxReT2Emwkz9-5eWwR4w"
 TMDB_API_KEY = "7dc544d9253bccc3cfecc1c677f69819"
 ADMIN_CHANNEL_ID = "-1002853936940"
